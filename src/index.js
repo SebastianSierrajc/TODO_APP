@@ -1,7 +1,13 @@
 import React from 'react';
 import ReactDom from 'react-dom';
+import { Provider } from 'react-redux';
+import store from './store/store';
+import App from './routes/App';
+
 
 ReactDom.render(
-  <h1>Hello World!</h1>
+  <Provider store={store}>
+    <App/>
+  </Provider>
   , document.getElementById('root'),
 );
