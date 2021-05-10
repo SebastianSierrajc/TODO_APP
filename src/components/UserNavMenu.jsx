@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import IconButton from '@material-ui/core/IconButton';
-import Avatar from '@material-ui/core/Avatar';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { makeStyles } from '@material-ui/core/styles';
@@ -10,6 +9,7 @@ import Badge from '@material-ui/core/Badge';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Link from '@material-ui/core/Link';
+import UserAvatar from './UserAvatar';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -17,11 +17,6 @@ const useStyles = makeStyles((theme) => ({
   },
   menuButton: {
     marginRight: theme.spacing(2),
-  },
-  menuItem: {
-    '&:hover': {
-      backgroundColor: 'rgba(0, 0, 0, 0.15)',
-    },
   },
   button: {
     textTransform: 'capitalize',
@@ -80,13 +75,13 @@ const UserNavMenu = ({ user }) => {
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       keepMounted
     >
-      <MenuItem className={classes.menuItem} onClick={handleUserMenuClose}>
+      <MenuItem onClick={handleUserMenuClose}>
         <Link href='/' color='textPrimary' underline='none'>Profile</Link>
       </MenuItem>
-      <MenuItem className={classes.menuItem} onClick={handleUserMenuClose}>
+      <MenuItem onClick={handleUserMenuClose}>
         <Link href='/' color='textPrimary' underline='none'>Setting</Link>
       </MenuItem>
-      <MenuItem className={classes.menuItem} onClick={handleUserMenuClose}>
+      <MenuItem onClick={handleUserMenuClose}>
         <Link href='/' color='textPrimary' underline='none'>Log out</Link>
       </MenuItem>
     </Menu>
@@ -103,32 +98,30 @@ const UserNavMenu = ({ user }) => {
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       keepMounted
     >
-      <MenuItem className={classes.menuItem} onClick={handleMobileMenuClose}>
+      <MenuItem onClick={handleMobileMenuClose}>
         <IconButton aria-label='show new mails' color='inherit'>
-          <Badge badgeContent={4} color='secondary'>
+          <Badge badgeContent={4} color='error'>
             <MailIcon />
           </Badge>
         </IconButton>
         Messages
       </MenuItem>
-      <MenuItem className={classes.menuItem} onClick={handleMobileMenuClose}>
+      <MenuItem onClick={handleMobileMenuClose}>
         <IconButton aria-label='show  new notifications' color='inherit'>
-          <Badge badgeContent={17} color='secondary'>
+          <Badge badgeContent={17} color='error'>
             <NotificationsIcon />
           </Badge>
         </IconButton>
         Notifications
       </MenuItem>
-      <MenuItem className={classes.menuItem} onClick={handleUserMenu}>
+      <MenuItem onClick={handleUserMenu}>
         <IconButton
           aria-label='account of current user'
           aria-controls='menu-user-navbar'
           aria-haspopup='true'
           color='inherit'
         >
-          {u.avatar ?
-            <Avatar className={classes.smallAvatar} alt='user avatar' src={u.avatar} /> :
-            <Avatar className={classes.smallAvatar} alt='user avatar'>{u.name[0].toUpperCase()}</Avatar>}
+          <UserAvatar user={u} isMobile />
         </IconButton>
         <p>{u.name.split(' ')[0].toUpperCase()}</p>
       </MenuItem>
@@ -139,12 +132,12 @@ const UserNavMenu = ({ user }) => {
     <>
       <div className={classes.sectionDesktop}>
         <IconButton aria-label='show new mails' color='inherit'>
-          <Badge badgeContent={4} color='secondary'>
+          <Badge badgeContent={4} color='error'>
             <MailIcon />
           </Badge>
         </IconButton>
         <IconButton aria-label='show  new notifications' color='inherit'>
-          <Badge badgeContent={17} color='secondary'>
+          <Badge badgeContent={17} color='error'>
             <NotificationsIcon />
           </Badge>
         </IconButton>
@@ -153,9 +146,7 @@ const UserNavMenu = ({ user }) => {
           aria-controls={userMenuId}
           onClick={handleUserMenu}
         >
-          {u.avatar ?
-            <Avatar alt='user avatar' src={u.avatar} /> :
-            <Avatar alt='user avatar'>{u.name[0].toUpperCase()}</Avatar>}
+          <UserAvatar user={u} isMobile={false} />
         </IconButton>
       </div>
       <div className={classes.sectionMobile}>

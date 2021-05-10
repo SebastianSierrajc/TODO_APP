@@ -47,8 +47,10 @@ const Navbar = (props) => {
                   <Button className={classes.button} href='/login'>
                     Log in
                   </Button>
-                  <Button variant='outlined' className={classes.button} href='/singup'>
-                    Sing up
+                  <Button variant='outlined' size='small' className={classes.button} href='/singup'>
+                    <Typography className={classes.title} variant='body2' noWrap>
+                      Sing up
+                    </Typography>
                   </Button>
                 </>
               )}
