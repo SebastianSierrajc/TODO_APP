@@ -40,7 +40,7 @@ const Navbar = (props) => {
             <div className={classes.grow} />
             {user.isAuth ?
               (
-                <UserNavMenu />
+                <UserNavMenu user={user} />
               ) :
               (
                 <>

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
 import FormControl from '@material-ui/core/FormControl';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
@@ -16,6 +18,7 @@ import Link from '@material-ui/core/Link';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import { logUser } from '../store/slices/userSlice';
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -36,13 +39,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LoginForm = () => {
+const LoginForm = (props) => {
   const classes = useStyles();
   const [form, setForm] = useState({
     email: '',
     password: '',
     showPassword: false,
     keepLogged: false,
+    emailError: false,
+    passwordError: false,
+    emailMsg: null,
+    passwordMsg: null,
   });
 
   const handleChange = (e) => {
@@ -61,10 +68,49 @@ const LoginForm = () => {
     setForm({ ...form, keepLogged: !form.keepLogged });
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const resultAction = await props.logUser({
+        email: form.email,
+        password: form.password,
+        keepLogged: form.keepLogged,
+      });
+      unwrapResult(resultAction);
+      setForm({
+        ...form,
+        email: '',
+        password: '',
+      });
+    } catch (err) {
+      if (err.message === 'BAD_EMAIL') {
+        setForm({
+          ...form,
+          passwordMsg: null,
+          passwordError: false,
+          emailMsg: 'Invalid email',
+          emailError: true,
+          password: '',
+        });
+      } else if (err.message === 'BAD_PASSWORD') {
+        setForm({
+          ...form,
+          passwordMsg: 'Incorrect password',
+          passwordError: true,
+          emailMsg: null,
+          emailError: false,
+          password: '',
+        });
+      } else {
+        console.error('Failed to logged in user', err);
+      }
+    }
+  };
+
   return (
     <>
-      <form className={classes.form} noValidate>
-        <FormControl variant='outlined' required>
+      <form className={classes.form} noValidate onSubmit={handleSubmit}>
+        <FormControl variant='outlined' required error={form.emailError}>
           <InputLabel htmlFor='input-email'>Email</InputLabel>
           <OutlinedInput
             name='email'
@@ -79,9 +125,9 @@ const LoginForm = () => {
               </InputAdornment>
             )}
           />
-          <FormHelperText id='input-email' />
+          <FormHelperText id='input-email'>{form.emailMsg}</FormHelperText>
         </FormControl>
-        <FormControl variant='outlined' required>
+        <FormControl variant='outlined' required error={form.passwordError}>
           <InputLabel htmlFor='input-password'>Password</InputLabel>
           <OutlinedInput
             name='password'
@@ -108,7 +154,7 @@ const LoginForm = () => {
               </InputAdornment>
             )}
           />
-          <FormHelperText id='input-password' />
+          <FormHelperText id='input-password'>{form.passwordMsg}</FormHelperText>
         </FormControl>
         <Button type='submit' className={classes.form_button} variant='contained' color='primary'>Log in</Button>
         <FormControlLabel
@@ -142,4 +188,8 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+const mapDispatchToProps = {
+  logUser,
+};
+
+export default connect(null, mapDispatchToProps)(LoginForm);

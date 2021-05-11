@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -41,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 
 const UserNavMenu = ({ user }) => {
   const classes = useStyles();
-  const u = user.entities[user.ids[0]];
+  const u = user.entities[user.current];
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileAnchorEl, setMobileAnchorEl] = useState(null);
   const isUserMenuOpen = Boolean(anchorEl);
@@ -167,10 +166,4 @@ const UserNavMenu = ({ user }) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    user: state.user,
-  };
-};
-
-export default connect(mapStateToProps)(UserNavMenu);
+export default UserNavMenu;
